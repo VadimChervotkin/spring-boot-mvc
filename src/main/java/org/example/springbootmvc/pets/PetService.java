@@ -39,8 +39,7 @@ public class PetService {
             throw new IllegalArgumentException("No user id passed");
         }
 
-        var foundPet = findPetById(petToUpdate.id())
-                .orElseThrow(() -> new NoSuchElementException("No such pet with id=%s".formatted(petToUpdate.id())));
+        var foundPet = getPetById(petToUpdate.id());
         var updatedPet = new Pet(foundPet.id(), petToUpdate.name(), petToUpdate.userId());
 
         var user = userService.getUserById(petToUpdate.userId());
@@ -50,8 +49,7 @@ public class PetService {
     }
 
     public void deletePet(Long id) {
-        var pet = findPetById(id)
-                .orElseThrow(() -> new NoSuchElementException("No such pet with id=%s".formatted(id)));
+        var pet = getPetById(id);
         var user = userService.getUserById(pet.userId());
         user.pets().remove(pet);
         }
