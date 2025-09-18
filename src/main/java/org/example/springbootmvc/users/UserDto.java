@@ -1,31 +1,26 @@
 package org.example.springbootmvc.users;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.*;
 import org.example.springbootmvc.pets.PetDto;
+import org.jspecify.annotations.NonNull;
 
 
 import java.util.List;
 
 public record UserDto(
 
-        @Null
         Long id,
 
-        @NotNull
-        @NotBlank
+        @NotBlank(message = "Name must be not empty")
         String name,
 
-        @NotNull
-        @Email
+        @Email(message = "Email must be valid")
         String email,
 
-        @NotNull
+        @Min(value = 0, message = "Age must be more than 0")
         Integer age,
 
-
+        @NonNull
         List<PetDto> pets
 ) {
 }
