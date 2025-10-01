@@ -62,4 +62,8 @@ public class UserService {
         }
         return usersMap.get(id);
     }
+
+    public List<User> getAllUsers() {
+        return usersMap.values().stream().toList();
+    }
 }

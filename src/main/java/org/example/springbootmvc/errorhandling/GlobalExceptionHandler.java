@@ -17,8 +17,49 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(value = {Exception.class})
+    protected ResponseEntity<ServerErrorDto> handleException(Exception e) {
+        log.error("Server error", e);
+        var message = new ServerErrorDto(
+                "Server error",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(message);
+    }
+
+    @ExceptionHandler(value = {IllegalArgumentException.class})
+    protected ResponseEntity<ServerErrorDto> handleBadRequest(Exception e) {
+        log.error("Server error", e);
+        var message = new ServerErrorDto(
+                "Bad request",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(message);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    protected ResponseEntity<ServerErrorDto> handlerNotFound(
+            NoSuchElementException e
+    ) {
+        log.error("Got exception", e);
+        var errorDto = new ServerErrorDto(
+                "Сущность не найдена",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(errorDto);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ServerErrorDto> handlerValidationException(
+    protected ResponseEntity<ServerErrorDto> handlerValidationException(
             MethodArgumentNotValidException e
     ) {
         log.error("Got validation exception", e);
@@ -37,36 +78,6 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(errorDto);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ServerErrorDto> handlerNotFoundException(
-            Exception e
-    ) {
-        log.error("Server error", e);
-        var errorDto = new ServerErrorDto(
-                "Server error",
-                e.getMessage(),
-                LocalDateTime.now()
-        );
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(errorDto);
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ServerErrorDto> handlerNotFoundException(
-            NoSuchElementException e
-    ) {
-        log.error("Got exception", e);
-        var errorDto = new ServerErrorDto(
-                "Сущность не найдена",
-                e.getMessage(),
-                LocalDateTime.now()
-        );
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
                 .body(errorDto);
     }
 }

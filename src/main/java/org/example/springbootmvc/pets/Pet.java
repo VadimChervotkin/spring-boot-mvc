@@ -3,16 +3,14 @@ package org.example.springbootmvc.pets;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record PetDto (
+public record Pet (
+        Long id,
 
-    Long id,
+        @NotBlank
+        String name,
 
-    @NotBlank
-    String name,
-
-    @NotNull
-    Long userId
-) {
-
+        @NotNull
+        Long userId
+)
+ {
 }
-

@@ -1,10 +1,17 @@
 package org.example.springbootmvc.users;
 
-import org.example.springbootmvc.UserDto;
+import org.example.springbootmvc.pets.PetDtoConverter;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserDtoConverter {
+
+    private final PetDtoConverter petDtoConverter;
+
+    public UserDtoConverter(PetDtoConverter petDtoConverter) {
+        this.petDtoConverter = petDtoConverter;
+    }
+
 
     public User toUser(UserDto userDto) {
         return new User(
@@ -12,7 +19,7 @@ public class UserDtoConverter {
                 userDto.name(),
                 userDto.email(),
                 userDto.age(),
-                userDto.pets()
+                userDto.pets().stream().map(petDtoConverter::toPet).toList()
         );
     }
 
@@ -22,7 +29,7 @@ public class UserDtoConverter {
                 user.name(),
                 user.email(),
                 user.age(),
-                user.pets()
+                user.pets().stream().map(petDtoConverter::toDto).toList()
         );
     }
 }
